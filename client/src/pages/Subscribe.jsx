@@ -2,34 +2,166 @@ import React from 'react';
 import {FaHeart,FaShareAlt,FaShoppingCart,FaEye} from 'react-icons/fa';
 import InnerImageZoom from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
-class Single_Product extends React.Component
-{    
+import { ToastContainer, toast } from 'react-toastify';
+
+import axios from 'axios';
+
+
+class Product extends React.Component
+
+
+{   
+
+    handelCart =(e)=>{
+        e.preventDefault()
+        let product = {
+            name: this.state.records.name,
+            img: this.state.records.image,
+            price: this.state.records.price,
+            id: this.state.records.id
+        }
+        this.addToCart(product)
+        console.log('HEllo');
+        let names = this.state.records.name +" has been added to your cart."
+          toast(names) 
+
+    }
+
+    addToCart = (product)=>{
+        const cart = localStorage.getItem('cart') ?
+        JSON.parse(localStorage.getItem('cart')) :
+        [];
+
+    // check if duplicates
+    const duplicates = cart.filter(cartItem => cartItem.id === product.id);
+
+    // if no duplicates, proceed
+    if (duplicates.length === 0) {
+        // prep product data
+        const productToAdd = {
+            ...product,
+            count: 1,
+        };
+
+        // add product data to cart
+        cart.push(productToAdd);
+
+        // add cart to local storage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+    }else{
+        const count = duplicates[0].count
+        let duplicate = cart.filter(cartItem => cartItem.id !== product.id);
+        const productToAdd = {
+            ...product,
+            count: this.state.clicks,
+        };
+        duplicate.push(productToAdd)
+        localStorage.setItem('cart', JSON.stringify(duplicate));
+
+    }
+}
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            records: [],
+            clicks:1,
+            show:true
+        };
+        
+    }
+
+     IncrementItem = () => {
+         if (this.state.clicks < 10) {
+             this.setState({
+                 clicks: this.state.clicks + 1
+             });
+         }
+     }
+
+     DecreaseItem = () => {
+         if (this.state.clicks > 1) {
+             this.setState({
+                 clicks: this.state.clicks - 1
+             });
+         }
+     }
+    
+    componentDidMount() {
+        const ids = window.location.href.split("/")[4];
+       const res = ids.replace(/-/g, " ");
+    //    const pRes = ids.replace(/-/g, " ");
+    //    alert(res);
+        const name = {
+          "name": res
+        }
+        // const name = {
+        //     "name": pRes
+        //   }
+       
+
+        axios.post('http://localhost:5000/single_subscribe', name)
+        .then(records => {
+            this.setState({
+                records: records.data.data 
+            })
+            console.log("hhssiiiiiiii",records.data.data)
+
+        })
+    
+    
+    //     axios.post('http://localhost:5000/SingleHomeProduct', name)
+    //     .then(records => {
+    //         this.setState({
+    //             records: records.data.data 
+    //         })
+    //         console.log("hhssiiiiiiii",records.data.data)
+
+    //     })
+    
+        
+    }
+
+
+    
     render()
+
     {
         return(
             <>
              <div className="container-fluid bg-main">
                  <section className='single-product-s'>
                      <div className="row">
+              <ToastContainer toastStyle={{ backgroundColor: "green" }} />
+
                          <div className="col-lg-5 pt-5 pb-5 col-sm-12 col-md-5">
                              <div className='single-img'>
-                             <InnerImageZoom  src="assets/img/uploads/2022/02/healthy-food-2.png" zoomSrc="assets/img/uploads/2022/02/healthy-food-2.png" zoomType="hover" zoomPreload={true} />
+                             <InnerImageZoom  src={`../assets/img/uploads/${this.state.records.image}`} zoomSrc={`../assets/img/uploads/${this.state.records.image}`} zoomType="hover" zoomPreload={true} />
                              </div>
                          </div>
                          <div className="col-lg-1 col-md-1"></div>
                          <div className="col-lg-6 pt-5 pb-lg-5  col-sm-12 col-md-6">
                              <div className='single-details'>
-                                 <h2>Premium Monthly Subscription</h2>
+                        
+                                      {/* <span>{this.state.records.ProductStocks}</span> */}
+                                 <h2>{this.state.records.name}</h2>
+                             
+                               
                                  <h6 className='mt-3 tags'><span>Tags</span> <a href='#' className='ml-4'>monthly subscription,</a>  <a href='#'>subscribe</a></h6>
-                                 <h3 className='mt-4'>₹10,000.00</h3>
+                                 <h3 className='mt-4'>₹{this.state.records.price}.00</h3>
                                  <div className='sn-para'>
-                                     <h4 className='mt-3'>Subscribe to the Premium Subscription plan with 10% on every order for the entire month along with free shipping throughout the month. Also, get a privilege pass for you and your 3 friends to visit the Orgeen farms and see the process of Hydroponics, Soil less cultivation and how we grow the microgreens.</h4>
+                                     <h4 className='mt-3'>{this.state.records.description}.</h4>
+                                     {/* <h4 className='mt-3'>Subscribe to the Premium Subscription plan with 10% on every order for the entire month along with free shipping throughout the month. Also, get a privilege pass for you and your 3 friends to visit the Orgeen farms and see the process of Hydroponics, Soil less cultivation and how we grow the microgreens.</h4> */}
                                  </div>
                                  <form className='cart pt-3 pb-3'>                                   
                                  <div className="quantity">
                                     <label for="quantity" className='text-light pl-4 pr-lg-4 quant'>Quantity :</label>
-                                    <input type="number" name="quantity" value="1"/>
-                                    <a href="#" className='button-g ml-lg-5 ml-3'><span>ADD TO CART</span></a>
+                                     <input type="button" onClick={this.IncrementItem} value="+" />
+                                    { <span className='cartValue' >{ this.state.clicks }</span> }
+
+                                    <input type="button" onClick={this.DecreaseItem} value="-" />
+                                    <button onClick={this.handelCart} className='button-g ml-lg-5 ml-3'><span>ADD TO CART</span></button>
                                  </div>                                 
                                  </form>
                                  <div className="share-wish d-flex pt-4">
@@ -77,7 +209,7 @@ class Single_Product extends React.Component
                          <h1 className='related-h text-center mt-4 mb-5'>Related Products</h1>
                          <div className="row">
                              <div className="col-lg-3 col-md-3 col-sm-12 text-center">                            
-                      <a href=""> <img className='msp-img img-fluid' src="assets/img/uploads/2022/02/healthy-food-1-300x300.png" alt="" />
+                      <a href=""> <img className='msp-img img-fluid' src="../assets/img/uploads/2022/02/healthy-food-1-300x300.png" alt="" />
                           <div className='product-tool'>
                            <a href="#" className='tool-button'><FaShoppingCart className='tool'/></a>
                                <a href="#" className='tool-button'><FaEye className='tool'/></a>
@@ -87,7 +219,7 @@ class Single_Product extends React.Component
                         <h5>₹7500.00</h5>
                           </div> 
                              <div className="col-lg-3 col-md-3 col-sm-12 text-center">
-                             <a href=""><img className='msp-img img-fluid' src="assets/img/uploads/2022/02/healthy-food-300x300.png" alt="" />
+                             <a href=""><img className='msp-img img-fluid' src="../assets/img/uploads/2022/02/healthy-food-300x300.png" alt="" />
                           <div className='product-tool'>
                            <a href="#" className='tool-button'><FaShoppingCart className='tool'/></a>
                                <a href="#" className='tool-button'><FaEye className='tool'/></a>
@@ -106,4 +238,5 @@ class Single_Product extends React.Component
         )
     }
 }
-export default Single_Product
+
+export default Product

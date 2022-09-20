@@ -4,6 +4,10 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { FaTruckMoving, FaExchangeAlt, FaShoppingCart, FaCreditCard, FaShareAlt, FaEye, FaStar, FaQuoteLeft } from 'react-icons/fa';
 import BackgroundSlider from 'react-background-slider';
 import Carousel from 'react-bootstrap/Carousel';
+import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
+
 
 
 const options = [
@@ -16,74 +20,113 @@ const options = [
     { value: 'Vegetables', label: 'Vegetables' }
 ]
 class Products extends React.Component {
+
+    handelCart = (name, price, img, id) => {
+
+        let product = {
+            name: name,
+            img: img,
+            price: parseInt(price),
+            id: id
+        }
+
+        this.addToCart(product)
+        console.log('HEllo');
+
+        this.state = {
+            // Get value from localStorage or use default
+            cart: localStorage.getItem("cart")
+                ? JSON.parse(localStorage.getItem("cart"))
+                : [],
+
+        };
+        let names = name + " has been added to your cart."
+        toast(names)
+
+        document.getElementById("abc").innerHTML = this.state.cart.length;
+    }
+
     constructor(props) {
         super(props);
 
         this.state = {
-            img: "",
-            id: "",
-            name: "",
-            slug: "",
-            parent_category: "",
-            regular: "",
-            sale: "",
-            image: "",
-            description: "",
-            value: ""
-
+            records: [],
+            recordss: []
 
         };
-        this.state = {
-            records: []
 
-        };
 
         this.getSingleProduct = this.getSingleProduct.bind(this);
     }
 
-    //   handleChangeImage = e => {
-    //     this.setState({ img: URL.createObjectURL(e.target.files[0]) })
+    addToCart = (product) => {
+        const cart = localStorage.getItem('cart') ?
+            JSON.parse(localStorage.getItem('cart')) :
+            [];
+        // check if duplicates
+        const duplicates = cart.filter(cartItem => cartItem.id === product.id);
 
-    //   }
-    componentDidMount() {
-        fetch('http://localhost:5000/all_categories')
-            .then(response => response.json())
-            .then(records => {
-                console.log("records", this.state.records)
-                this.setState({
-                    records: records
+        // if no duplicates, proceed
+        if (duplicates.length === 0) {
+            // prep product data
+            const productToAdd = {
+                ...product,
+                count: 1,
+            };
 
-                })
+            // add product data to cart
+            cart.push(productToAdd);
 
-            })
-            .catch(error => console.log(error))
+            // add cart to local storage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+        } else {
+            const count = duplicates[0].count
+            let duplicate = cart.filter(cartItem => cartItem.id !== product.id);
+            const productToAdd = {
+                ...product,
+                count: count + 1,
+            };
+            duplicate.push(productToAdd)
+            localStorage.setItem('cart', JSON.stringify(duplicate));
+
+        }
+
     }
 
+    componentDidMount() {
+        fetch('http://localhost:5000/all_categories')
+            .then(response =>
+                response.json()
+            )
+            .then(records => {
+                this.setState({
+                    records: records.allcategory,
+                    recordss: records.allProducts
+                })
+            })
 
 
+
+    }
     getSingleProduct(event) {
 
     }
-
-
-    // 
-    // handleParentCategory = (e) => {
-    //   this.setState({ parent_category: e.value });
-    // } 
-
+    
     render() {
-
-
+// console.log("home",this.state.records);
         return (
             <>
                 <div className="container-fluid home-main">
                     <section className='home-first-s mt-n4'>
                         <div className="row">
+                            <ToastContainer toastStyle={{ backgroundColor: "green" }} />
+
                             <div className="col-md-8 col-sm-12 background-slide">
                                 <div className="card">
                                     <div className="card-body">
                                         <BackgroundSlider
-                                            images={["assets/img/uploads/2022/01/farm-field-organic-greenhouse-harvest-vegetables-groceries-wooden-box-fresh-produce_t20_pLJVGe-1.jpg", "assets/img/uploads/2022/01/grocery-delivery-services-online-shopping-home-smart-food-grocery-delivery-woman-customer-receiving_t20_E0J4aK.jpg"]}
+                                            images={["../assets/img/uploads/2022/01/farm-field-organic-greenhouse-harvest-vegetables-groceries-wooden-box-fresh-produce_t20_pLJVGe-1.jpg", "assets/img/uploads/2022/01/grocery-delivery-services-online-shopping-home-smart-food-grocery-delivery-woman-customer-receiving_t20_E0J4aK.jpg"]}
                                             duration={10} transition={2} />
                                     </div>
                                 </div>
@@ -164,15 +207,23 @@ class Products extends React.Component {
 
                                 <div className="row">
                                     {
-                                        this.state.records.map((user, index) => (
+                                        this.state.records.map((user) => (
                                             <div className="col-md-2">
+                                                {/* <Link to={'/single-product/'+user.id}> */}
 
-                                                <img src={`assets/img/uploads/${user.image}`} alt="First slide" className='img-fluid' />
+                                                <Link to={{ pathname: `/Product/${user.slug.replace(' ', '-')}` }}>
+
+                                                    <img src={`assets/img/uploads/${user.image}`} alt="First slide" className='img-fluid' />
+                                                </Link>
+
+
                                                 <h6>{user.name}</h6>
                                                 <h4>{user.slug}</h4>
-                                                <h5>₹{user.parent_category}</h5>
+                                                <h5>₹ {user.price}</h5>
+                                                {/* <h3 onClick={this.getCarts}>eeeeee</h3> */}
                                                 <div className='product-tool'>
-                                                    <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
+                                                    <button className='tool-button' onClick={() => { this.handelCart(user.name, user.price, user.image, user.id) }}><FaShoppingCart className='tool' /></button>
+                                                    {/* <a href="#" className='tool-button' onClick={()=>{this.handelCart(user.name,user.price,user.image,user.id)}}><FaShoppingCart className='tool' /></a>  */}
                                                     <a href="#" className='tool-button'><FaShareAlt className='tool' /></a>
                                                 </div>
 
@@ -183,7 +234,8 @@ class Products extends React.Component {
                                 </div>
 
                             </Carousel.Item>
-                       
+
+
                         </Carousel>
                         {/* desktop veiw end */}
                         {/* mobile view */}
@@ -200,7 +252,7 @@ class Products extends React.Component {
                                     </div>
                                 </div>
                             </Carousel.Item>
-                            <Carousel.Item>
+                            {/* <Carousel.Item>
                                 <div className="col-sm-12">
                                     <img src="assets/img/uploads/2022/01/64-370x422.png" alt="First slide" className='img-fluid' />
                                     <h6>Hydroponics</h6>
@@ -330,7 +382,7 @@ class Products extends React.Component {
                                         <a href="#" className='tool-button'><FaShareAlt className='tool' /></a>
                                     </div>
                                 </div>
-                            </Carousel.Item>
+                            </Carousel.Item> */}
                         </Carousel>
                     </section>
                     <section className='banner-usp'>
@@ -391,34 +443,18 @@ class Products extends React.Component {
                         <Carousel className='desktop'>
                             <Carousel.Item>
                                 <div className="row">
-                                    <div className="col-md-2">
-                                        <img src="assets/img/uploads/2022/01/84-370x422.png" alt="First slide" className='img-fluid' />
-                                        <h6>Fruits</h6>
-                                        <h4>Pomegranate (Coming Soon)</h4>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <img src="assets/img/uploads/2022/01/60-370x422.png" alt="First slide" className='img-fluid' />
-                                        <h6>Fruits</h6>
-                                        <h4>Pineapple (Coming Soon)</h4>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <img src="assets/img/uploads/2022/01/59-370x422.png" alt="First slide" className='img-fluid' />
-                                        <h6>Fruits</h6>
-                                        <h4>Kiwi (Coming Soon)</h4>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <img src="assets/img/uploads/2022/01/58-370x422.png" alt="First slide" className='img-fluid' />
-                                        <h6>Fruits</h6>
-                                        <h4>Guava (Coming Soon)</h4>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <img src="assets/img/uploads/2022/01/85-370x422.png" alt="First slide" className='img-fluid' />
-                                        <h6>Fruits</h6>
-                                        <h4>Orange (Coming Soon)</h4>
-                                    </div>
+                                    {this.state.recordss.map((users) => (
+                                        <div className="col-md-2">
+                                            <Link to={{ pathname: `/Product/${users.name.replace(' ', '-')}` }}>
+                                                <img src={`assets/img/uploads/${users.image}`} alt="First slide" className='img-fluid' />
+                                            </Link>
+                                            <h6>{users.name}</h6>
+                                            <h4> Pomegranate({users.ProductStocks}) </h4>
+                                        </div>
+                                    ))}
                                 </div>
                             </Carousel.Item>
-                            <Carousel.Item>
+                            {/* <Carousel.Item>
                                 <div className="row">
                                     <div className="col-md-2">
                                         <img src="assets/img/uploads/2022/01/56-370x422.png" alt="second slide" className='img-fluid' />
@@ -475,7 +511,7 @@ class Products extends React.Component {
                                         <h4>Grapes (Coming Soon)</h4>
                                     </div>
                                 </div>
-                            </Carousel.Item>
+                            </Carousel.Item> */}
                         </Carousel>
                         {/* desktop view */}
                         {/* mobile view */}

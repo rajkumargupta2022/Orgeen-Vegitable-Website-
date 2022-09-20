@@ -50,7 +50,7 @@ class Categories extends React.Component {
       .then(records => {
         console.log("records", this.state.records)
         this.setState({
-          records: records
+          records: records.allcategory
         })
       })
       .catch(error => console.log(error))
@@ -69,7 +69,7 @@ class Categories extends React.Component {
               "id": event.target.dataset.id
             }
             axios.post('http://localhost:5000/delete_categories', data)
-              .then(res => console.log(res.data));
+              .then(res => console.log("data",res.data));
             window.location.reload(false);
           }
         },
@@ -87,6 +87,7 @@ class Categories extends React.Component {
     const datas = {
       "id": event.target.dataset.id
     }
+    alert(event.target.dataset.id)
     event.preventDefault();
     axios.post('http://localhost:5000/single_categories', datas)
       .then(res => {
@@ -96,6 +97,7 @@ class Categories extends React.Component {
         this.setState({ slug: res.data.slug });
         this.setState({ parent_category:res.data.parent_category});
         this.setState({ description: res.data.description })
+        console.log("mmmmmmmmmmmmmm",this.state.description);
 
       });
   }

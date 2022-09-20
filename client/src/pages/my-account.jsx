@@ -1,7 +1,24 @@
 import React from "react";
 import { FaTachometerAlt, FaCartArrowDown, FaDownload, FaWallet, FaMapMarkerAlt, FaUserAlt, FaGift, FaPlusCircle, FaRandom, FaListAlt, FaSignOutAlt } from 'react-icons/fa';
 class My_Account extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            records: []
+
+        };
+    }
+
+    componentDidMount() {
+        fetch('http://localhost:5000/orderData')
+            .then((response) => response.json())
+            .then(records => {
+                this.setState({ records: records.allOrder });
+            });
+    }
+
     render() {
+
         return (
             <>
                 <style>
@@ -61,22 +78,19 @@ class My_Account extends React.Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                            {
+                                            this.state.records.map((user) => (
                                                 <tr>
-                                                    <td><a href="#">#1723</a></td>
-                                                    <td>April 23, 2022</td>
-                                                    <td>Cancelled </td>
-                                                    <td>₹198.00 for 1 item </td>
+                                                    <td><a href="#">{user.order_number}</a></td>
+                                                    <td>{user.createdAt}</td>
+                                                    <td>{user.cod} </td>
+                                                    <td>₹{user.total_price}.00 for 1 item </td>
                                                     <td><button>VIEW</button></td>
 
                                                 </tr>
-                                                <tr>
-                                                    <td><a href="#">#1439 </a></td>
-                                                    <td>March 24, 2022</td>
-                                                    <td>Cancelled </td>
-                                                    <td>₹10.00 for 1 item </td>
-                                                    <td><button>VIEW</button></td>
-
-                                                </tr>
+                                                  ))
+                                                }
+                                          
                                             </tbody>
                                         </table>
                                     </div>
@@ -130,7 +144,96 @@ class My_Account extends React.Component {
                                         </address>
                                     </div>
                                     <div id="account" className="container tab-pane fade" >
-                                        <form>
+                                        <div className="row">
+                                            <div className="col-md-6 mb-4">
+                                            <div className="card ac-d">                                
+                                        <form className="needs-validation" novalidate="">
+
+                                            <div className="card-body">
+                                                <div className="form-group row">
+                                                    <label className="col-sm-5 col-form-label" for="first">First name
+                                                        <abbr className="required" title="required">*</abbr>
+                                                    </label>
+                                                    <div className="col-sm-7">
+                                                        <input type="text" className="form-control" required="" name="first" />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label className="col-sm-5 col-form-label" for="last">Last name
+                                                        <abbr className="required" title="required">*</abbr></label>
+                                                    <div className="col-sm-7">
+                                                        <input type="text" className="form-control" required="" name="last" />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label className="col-sm-5 col-form-label" for="displayName">Display Name</label>
+                                                    <div className="col-sm-7">
+                                                        <input type="text" className="form-control" name="displayName" />
+                                                    </div>
+                                                </div>                                        
+                                                <div className="form-group row">
+                                                    <label className="col-sm-5 col-form-label" for="email">Email address
+                                                        <abbr className="required" title="required">*</abbr></label>
+                                                    <div className="col-sm-7">
+                                                        <input type="email" name="email" className="form-control" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="text-right pb-3 pr-3">
+                                                <button className="btn btn-success">Save</button>
+                                            </div>
+                                        </form>                               
+
+                                    
+                                        </div>
+
+                                </div>
+                                <div className="col-md-6 mb-4">
+                                            <div className="card ac-d">
+                                    <div className="card-header bg-success">
+                                        
+                                            <h4 className="text-center text-uppercase  text-white">Password change</h4>
+                                            </div>
+                                           
+                                   
+                                    
+                                        <form className="needs-validation" novalidate="">
+
+                                            <div className="card-body">
+                                                <div className="form-group row">
+                                                    <label className="col-sm-5 col-form-label" for="currentpass">Current password
+                                                        <abbr className="required" title="required">*</abbr>
+                                                    </label>
+                                                    <div className="col-sm-7">
+                                                        <input type="text" className="form-control" required="" name="currentpass" />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label className="col-sm-5 col-form-label" for="newpass">New password
+                                                        <abbr className="required" title="required">*</abbr></label>
+                                                    <div className="col-sm-7">
+                                                        <input type="text" className="form-control" required="" name="newpass" />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label className="col-sm-5 col-form-label" for="confirmpass">Confirm password</label>
+                                                    <div className="col-sm-7">
+                                                        <input type="text" className="form-control" name="confirmpass" />
+                                                    </div>
+                                                </div>                                        
+                                              
+                                            </div>
+                                            <div className="text-right pb-3 pr-3">
+                                                <button className="btn btn-success pb-2">Save Change</button>
+                                            </div>
+                                        </form>                               
+
+                                    
+                                   
+
+                                </div>
+                                                {/* <div className="card">
+                                            <form>
                                             <label for="firstName">First Name <span className="text-danger">*</span></label>
                                             <input type="text" name="firstName" className="ml-md-5" /><br />
                                             <label for="lastName">Last Name <span className="text-danger">*</span></label>
@@ -148,6 +251,10 @@ class My_Account extends React.Component {
                                             <input type="password" name="confirmpass" /><br />
                                             <button>Save changes</button>
                                         </form>
+                                        </div> */}
+                                            </div>
+                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>

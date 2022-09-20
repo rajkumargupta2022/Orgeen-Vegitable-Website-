@@ -1,5 +1,7 @@
 import React from "react";
 import { FaBoxOpen } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+
 
 class Side_Navbar extends React.Component
 {
@@ -12,8 +14,8 @@ class Side_Navbar extends React.Component
         <aside id="sidebar-wrapper">
           <div className="sidebar-brand">
           {/* <img alt="image" src="assets/img/logo.png" className="header-logo" /> */}
-            <a href="index.html">  <span
-                className="logo-name">BFC Softtech</span>
+            <a href="/dashboard">  <span
+                className="logo-name">ORGEEN</span>
             </a>
           </div>
           <div className="sidebar-user">
@@ -21,7 +23,7 @@ class Side_Navbar extends React.Component
               <img alt="image" src="assets/img/uploads/2021/10/user.jpg"/>
             </div>
             <div className="sidebar-user-details">
-              <div className="user-name">Lorem Ipsum</div>
+              <div className="user-name">Orgeen</div>
               <div className="user-role">Administrator</div>
             </div>
           </div>
@@ -39,6 +41,13 @@ class Side_Navbar extends React.Component
               <ul className="dropdown-menu">
                 <li><a className="nav-link" href="/products">All Product</a></li>
                 <li><a className="nav-link" href="/product-form">Add Product</a></li>
+              </ul>
+            </li>
+            <li className="dropdown">
+              <a href="javascript:void(0)" className="nav-link has-dropdown"><i data-feather="briefcase"></i><span>Subscription Plan</span></a>
+              <ul className="dropdown-menu">
+                <li><a className="nav-link" href="/add-subscription-plan">Add Subscription Plan</a></li>
+                <li><a className="nav-link" href="/all-subscription-plan">All Subscription Plan</a></li>
               </ul>
             </li>
            <li className="dropdown">

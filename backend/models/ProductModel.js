@@ -13,6 +13,9 @@ const Products = db.define('product', {
     parent_category: {
         type: DataTypes.STRING
     },
+    ProductStocks: {
+        type: DataTypes.STRING
+    },
     regular: {
         type: DataTypes.NUMBER
     },
@@ -21,6 +24,10 @@ const Products = db.define('product', {
     },
     description: {
         type: DataTypes.TEXT
+    }
+    ,
+    image: {
+        type: DataTypes.STRING
     }
 }, {
     freezeTableName: true

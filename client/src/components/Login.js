@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState('');
-    const history = useHistory();
+    // const history = useHistory();
 
     const Auth = async (e) => {
         e.preventDefault();
@@ -15,7 +15,7 @@ const Login = () => {
                 email: email,
                 password: password
             });
-            history.push("/dashboard");
+            // history.push("/dashboard");
         } catch (error) {
             if (error.response) {
                 setMsg(error.response.data.msg);

@@ -1,17 +1,21 @@
 
 import Categories from "../models/CategoryModel.js";
+import Products from "../models/ProductModel.js";
+import OrderModel from "../models/OrderModel.js";
+
+
 
 
 export const Category = async (req, res) => {
   //filename
-  console.log("jhgy",req);
+  // console.log("jhgy", req.body.name)
   const image = req.file.filename;
-
-  const { name, slug, parent_category, description} = req.body;
+  const { name, slug,price, parent_category, description} = req.body;
   try {
       Categories.create({
           name: name,
           slug: slug,
+          price: price,
           parent_category: parent_category,
           description: description,
           image:image
@@ -19,42 +23,32 @@ export const Category = async (req, res) => {
       });
       res.status(200).json({ msg: "category added successfully" });
   } catch (error) {
-      res.status(200).json({ msg: "Failed" });
+      res.status(400).json({ msg: "Failed" });
   }
 }
 
 
-// export const Category = async (req, res) => {
-
-//    console.log(req.file.filename);
-// const { name, slug, parent_category, description,image } = req.body;
-// // file.filename
-
-//   Categories.create({
-//              name: name,
-//               slug: slug,
-//               parent_category: parent_category,
-//               description: description,
-//               image:image
-
-    
-              
-//           });
-// }
 export const getCategories = async (req, res) => {
+  const id = req.body.id;
+
     try {
-        const allcategory = await Categories.findAll({
-            attributes: ['id', 'name', 'slug','parent_category','description','image']
-        });
-        res.json(allcategory);
+
+        const allcategory = await Categories.findAll();
+        const allProducts = await Products.findAll();
+       
+//{where:{"parent_category" : 2}}
+        res.status(200).json({allcategory: allcategory,allProducts: allProducts});
     } catch (error) {
-        res.status(200).json({ msg: "Failed found" });
+        res.status(400).json({ msg: "Failed found" });
     }
 }
 //get single category
 export const getSingleCategory = async (req, res) => {
   
+  
   const id = req.body.id;
+  // console.log("sdsffdd",id);
+
   Categories.findByPk(id)
     .then(data => {
       if (data) {
@@ -125,6 +119,72 @@ export const deleteCategories = async (req, res) => {
         message: "Could not delete category with id=" + id
       });
     });
+};
+
+
+
+export const SingleProduct = async (req, res) => {
+  const slug = req.body.slug;
+  
+console.log("Ddddddddsax",req.body.name);
+try {
+  const SingleData = await Categories.findOne({where:{"slug" : slug}});
+   
+//{where:{"parent_category" : 2}}
+    const data = {
+        "status":200,
+        "msg":"success",
+        "data":SingleData
+    }
+    res.status(200).json(data);
+    // console.log("mmmmmmmmmm",data);
+} catch (error) {
+    res.status(400).json({ msg: "Failed found" });
+}
+
+};
+
+export const SingleHomeProduct = async (req, res) => {
+  const name = req.body.name;
+  
+console.log("Ddddddddsax",req.body.name);
+try {
+  const SingleProductData = await Products.findOne({where:{"name" : name}});
+   
+//{where:{"parent_category" : 2}}
+    const data = {
+        "status":200,
+        "msg":"success",
+        "data":SingleProductData
+    }
+    res.status(200).json(data);
+    // console.log("mmmmmmmmmm",data);
+} catch (error) {
+    res.status(400).json({ msg: "Failed found" });
+}
+
+};
+
+
+export const getSingleAddData = async (req, res) => {
+  const id = req.body.id;
+  
+console.log("Ddddddddsax",req.body.id);
+try {
+  const AddSingleData = await Categories.findOne({where:{"id" : id}});
+   
+//{where:{"parent_category" : 2}}
+    const data = {
+        "status":200,
+        "msg":"success",
+        "data":AddSingleData
+    }
+    res.status(200).json(data);
+    // console.log("mmmmmmmmmm",data);
+} catch (error) {
+    res.status(400).json({ msg: "Failed found" });
+}
+
 };
  
      

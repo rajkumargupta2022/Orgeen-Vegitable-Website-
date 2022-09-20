@@ -10,6 +10,9 @@ const Categories = db.define('category', {
     slug: {
         type: DataTypes.STRING
     },
+    price: {
+        type: DataTypes.NUMBER
+    },
     parent_category: {
         type: DataTypes.STRING
     },

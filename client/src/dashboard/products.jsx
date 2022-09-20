@@ -141,7 +141,7 @@ loaded () {
   // } 
 
   render() {
-    const { id, name, slug, description, parent_category,regular,sale } = this.state
+    const { id, name, slug, description, parent_category,regular,sale,image } = this.state
     const data = {
       columns: [
         {
@@ -214,7 +214,8 @@ loaded () {
           regular: item.regular,
           sale: item.sale,
           description: item.description,
-          image: item.image,
+          image:  <img src={`assets/img/uploads/${item.image}`} alt="First slide" className='img-fluid' height="50" width="60px" />,
+
           action: <div className="text-center"><input className="btn-primary px-3 py-1 border-0" type="button" value="EDIT" data-toggle="modal" data-target="#exampleModal" onClick={this.getSingleProduct} data-id={item.id} />  <input className="btn-danger px-3 py-1 border-0" type="button" data-id={item.id} value="DELETE" onClick={this.deleteRow} /></div>,
         }
       })

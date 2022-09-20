@@ -1,14 +1,104 @@
 import React from 'react';
 import Shop_Sidebar from "./shop-sidebar";
 import { FaAngleRight, FaAngleDown, FaShoppingCart, FaEye } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 class Shop extends React.Component {
+    handelCart =(name,price,img,id)=>{
+        let product = {
+            name: name,
+            img: img,
+            price: parseInt(price),
+            id: id
+        }
+        this.addToCart(product)
+        console.log('HEllo');
+        let names = name +" has been added to your cart."
+        toast(names) 
+
+      //  window.location.reload(false)
+      document.getElementById("abc").innerHTML=this.state.cart.length;
+
+    }
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            records: [],
+            recordss: []
+
+        };
+        
+
+        this.getSingleProduct = this.getSingleProduct.bind(this);
+    }
+   
+    addToCart = (product)=>{
+        const cart = localStorage.getItem('cart') ?
+        JSON.parse(localStorage.getItem('cart')) :
+        [];
+
+    // check if duplicates
+    const duplicates = cart.filter(cartItem => cartItem.id === product.id);
+
+    // if no duplicates, proceed
+    if (duplicates.length === 0) {
+        // prep product data
+        const productToAdd = {
+            ...product,
+            count: 1,
+        };
+
+        // add product data to cart
+        cart.push(productToAdd);
+
+        // add cart to local storage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+    }else{
+        const count = duplicates[0].count
+        let duplicate = cart.filter(cartItem => cartItem.id !== product.id);
+        const productToAdd = {
+            ...product,
+            count: count+1,
+        };
+        duplicate.push(productToAdd)
+        localStorage.setItem('cart', JSON.stringify(duplicate));
+
+    }
+}
+    componentDidMount() {
+        fetch('http://localhost:5000/all_categories')
+            .then(response =>
+                response.json()
+            )
+            
+            .then(records => {
+                console.log("Wwwwwwwwww",records.allProducts);
+                this.setState({
+                    records: records.allcategory,
+                    recordss: records.allProducts
+                    
+                })
+            })
+           
+           
+    }
+
+    getSingleProduct(event) {
+
+    }
     render() {
         return (
             <>
                 <div className="container-fluid shop-main">
                     <section className='shop-main-section'>
                         <div className="row">
+              <ToastContainer toastStyle={{ backgroundColor: "green" }} />
+
                             <div className="col-lg-4 col-md-5">
                                 <Shop_Sidebar />
                             </div>
@@ -86,28 +176,26 @@ class Shop extends React.Component {
                                         </div>
                                     </div>
                                     <div className="row">
+                                    {
+                                        this.state.records.map((user) => (
                                         <div className="col-lg-3  col-md-6 text-center">
-                                            <img src="assets/img/uploads/2022/03/Karaoke-2-295x322.png" alt="" />
-                                            <h6>Vegetables</h6>
-                                            <h4>Lobia (1kg)</h4>
-                                            <h5>₹96.00</h5>
+                                            <Link to={{pathname:`/Product/${user.slug.replace(' ','-')}`}}>
+                                            <img src={`assets/img/uploads/${user.image}`} alt="" />
+                                            </Link>
+                                            <h6>{user.parent_category}</h6>
+                                            <h4>{user.name} (1kg)</h4>
+                                            <h5>₹{user.price}.00</h5>
                                             <div className='product-tool'>
-                                                <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
+                                            <a href="#" onClick={()=>{this.handelCart(user.name,user.price,user.image,user.id)}}className='tool-button'><FaShoppingCart className='tool' /></a> 
+
                                                 <a href="#" className='tool-button'><FaEye className='tool' /></a>
                                             </div>
                                         </div>
+                                          ))
+                                        }
+                                        
                                         <div className="col-lg-3 col-md-6 text-center">
-                                            <img src="assets/img/uploads/2022/02/cucumbre-295x322.png" alt="" />
-                                            <h6>Soil Less</h6>
-                                            <h4>Cucumber (1kg)</h4>
-                                            <h5>₹60.00</h5>
-                                            <div className='product-tool'>
-                                                <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
-                                                <a href="#" className='tool-button'><FaEye className='tool' /></a>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-3 col-md-6 text-center">
-                                            <img src="assets/img/uploads/2022/02/capsi-295x322.png" alt="" />
+                                            <img src="../assets/img/uploads/2022/02/capsi-295x322.png" alt="" />
                                             <h6>Soil Less</h6>
                                             <h4>Capiscum (1kg)</h4>
                                             <h5>₹120.00</h5>

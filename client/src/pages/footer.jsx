@@ -20,12 +20,12 @@ class Footer extends React.Component {
                         <div className="card">
                             <div className="card-body">
                                 <div className="row">
-                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="assets/img/uploads/2021/01/Asset-1@8x-copy.png" alt="img1" /></div>
-                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="assets/img/uploads/2021/01/Asset-4@8x-copy.png" alt="img2" /></div>
-                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="assets/img/uploads/2021/01/Asset-5@8x-copy.png" alt="img3" /></div>
-                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="assets/img/uploads/2021/01/Asset-2@8x-copy.png" alt="img4" /></div>
-                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="assets/img/uploads/2021/01/Asset-6@8x-copy.png" alt="img5" /></div>
-                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="assets/img/uploads/2021/01/Asset-7@8x-copy.png" alt="img6" /></div>
+                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="../assets/img/uploads/2021/01/Asset-1@8x-copy.png" alt="img1" /></div>
+                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="../assets/img/uploads/2021/01/Asset-4@8x-copy.png" alt="img2" /></div>
+                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="../assets/img/uploads/2021/01/Asset-5@8x-copy.png" alt="img3" /></div>
+                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="../assets/img/uploads/2021/01/Asset-2@8x-copy.png" alt="img4" /></div>
+                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="../assets/img/uploads/2021/01/Asset-6@8x-copy.png" alt="img5" /></div>
+                                    <div className="col-lg-2 col-sm-2 col-xs-12 text-center"><img src="../assets/img/uploads/2021/01/Asset-7@8x-copy.png" alt="img6" /></div>
                                 </div>
                             </div>
                         </div>
@@ -34,7 +34,7 @@ class Footer extends React.Component {
                         <div className="container-fluid">
                             <div className="row">
                                 <div className="col-lg-5 col-sm-5">
-                                    <a href='/'> <img src='assets/img/uploads/2021/01/Asset-19@8x.png' alt='logo' className='mt-n3' />     </a>
+                                    <a href='/'> <img src='../assets/img/uploads/2021/01/Asset-19@8x.png' alt='logo' className='mt-n3' />     </a>
                                     <p>We are here to make a change. A change to a healthier form of living, with our extensive range of green and fresh products grown with the process of Hydroponics and Soil-less techniques, we aim to provide the quality harvest to promote healthy living.</p>
                                     <ul className='d-flex footer-social'>
                                         <li><a href=""><FaFacebookF /></a></li>

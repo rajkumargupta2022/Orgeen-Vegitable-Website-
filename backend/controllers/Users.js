@@ -1,6 +1,12 @@
 import Users from "../models/UserModel.js";
+import OrderModel from "../models/OrderModel.js";
+
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
+const refreshSecret = 'jnXjFgXxrEQGLN5ZO5XJoYi7M075O/t36jNLhrv/72ITvAfGhzB5nIg4AN3xOi8y3tq2lXzRdLyxmGFppKoKz31aSgR89AO9Pois39Ot2x9QV3qzYje6PlfcBUu9rz0kH2cbtCRdc99AZSOrIzPoubzAG6fcAQW/Lgbr/BHetOfpEGrJfzYGkKVf782EYcTJ9Pu1BYROxp9FFRBy60zwJ7Vv2CNT3lgsMRaFbYgO5M/uErBxE3BLmVPBhEPvp6n56zfkzNsmlU1JhaMlZXIaKm5Cfw2sasWNOWS9lj9iE8qQdpos/Iit/XpkZzp7NkWoLMgBsQWAmeCiwK/blmfqIA=='
+
+const secret = 'PlCCXxjIDR6QiEGRGf6BU2wklIpaRKJyT45cHpccxHsgbgVV0S0FsrvS1evDtPehdJx4T17TAxlTODD4lRV8nkpB7WeRltp+mJw2OHNpSAWG4iT38iYhxt/CHMnm9yb30YWfspmukFcfa6vNDBq759/vpP9oT5r5Y0zqxcnrsCykljVzt5P8olJCf6Z4zUrCdk6uHcn0S7cQyqoMrwl7waysREbIF59TZ4TXb10gGOQwKYCdm1B98ao7n9N7hb9jwYYt9b8E//n2x1Y0J1V9UWEFld+lXJhvWkF5yVZXEfdxgaaJKUUCFB6D2253O34rdI+Bfo77VQqkhKCQnqklpA=='
 
 export const getUsers = async (req, res) => {
     try {
@@ -14,23 +20,47 @@ export const getUsers = async (req, res) => {
 }
 
 export const Register = async (req, res) => {
-    const { name, email, password, confPassword } = req.body;
-    if (password !== confPassword) return res.status(400).json({ msg: "Password dan Confirm Password tidak cocok" });
+    const { email, name, lname, password, confPassword } = req.body;
+    if (email == "") return res.status(400).json({ msg: "Please Enter your Email" });
+    if (name == "") return res.status(400).json({ msg: "Please Enter your Name" });
+    if (password !== confPassword) return res.status(400).json({ msg: "Password and Confirm Password not match" });
+    
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
+    const user = await Users.findAll({
+        where: {
+            email: req.body.email
+        }
+    });
+  
+
+    // if (user) {
+    //   return res.status(400).send({msg:"User Already Exist. Please Login"});
+    // }
+    res.json(user);
+
+    // if ((user[0].email==req.body.email)) return res.status(200).json({ msg: "Email Id Allready Registered" });
+
+
     try {
+
         await Users.create({
-            name: name,
             email: email,
+            name: name,
+            lname: lname,
             password: hashPassword
         });
-        res.json({ msg: "Register Berhasil" });
+        //    return res.status(200).json({ msg: "Registration Succesfully" });
     } catch (error) {
         console.log(error);
     }
 }
 
 export const Login = async (req, res) => {
+    // if ((req.body.email!="")) return res.status(400).json({ msg: "Please Enter Email" });
+    
+    // const orderData = await OrderModel.findOne({where: { email: req.body.email }})
+    // res.status(200).json({orderData: orderData});
 
     try {
 
@@ -38,33 +68,24 @@ export const Login = async (req, res) => {
             where: {
                 email: req.body.email
             }
-        });
+        })
 
+        // console.log("aaaaaa", req.body.email);
         const match = await bcrypt.compare(req.body.password, user[0].password);
-
         if (!match) return res.status(400).json({ msg: "Wrong Password" });
-        const userId = user[0].id;
-        const name = user[0].name;
-        const email = user[0].email;
-        const accessToken = jwt.sign({ userId, name, email }, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '20s'
-        });
+        if ((user[0].email==req.body.email)) {
+            const accessToken = jwt.sign({'userId':user[0].id, 'name':user[0].name, 'email':user[0].email}, secret,{
+                expiresIn: '1500s'
+            });
 
-        const refreshToken = jwt.sign({ userId, name, email }, process.env.REFRESH_TOKEN_SECRET, {
-            expiresIn: '1d'
-        });
-
-        await Users.update({ refresh_token: refreshToken }, {
-            where: {
-                id: userId
-            }
-        });
-        // console.log("Match ", refreshToken);return false;
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000
-        });
-        res.json({ accessToken });
+            const refreshToken = jwt.sign({'userId':user[0].id, 'name':user[0].name, 'email':user[0].email}, refreshSecret,{
+                expiresIn: '7d'
+            });
+            // res.json({ accessToken });
+            return res.status(200).json({
+                msg: "User found", token: accessToken,refreshToken:refreshToken
+            })};
+      
     } catch (error) {
         res.status(404).json({ msg: "Email Id not Exit" });
     }

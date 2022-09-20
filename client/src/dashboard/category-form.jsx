@@ -7,71 +7,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const options = [
   { value: '1', label: 'Fruits' },
-  { value: '2', label: 'Vegetable' }
+  { value: '2', label: 'Vegetables' },
+  { value: '3', label: 'Soil Less' },
+  { value: '4', label: 'Hydroponics' },
+  { value: '5', label: 'Microgreens' }
  
 ]
 class Category_Form extends React.Component {
-  
-
-//   constructor(props) {
-//     super(props);
-//     this.state = { img: "" };
-//     this.state = {
-//       name: "",
-//       slug: "",
-//       parent_category: "",
-//       description: "",
-//       image: ""
-//     };
-
-
-
-
-//   }
-
-//   handleChangeImage = e => {
-//     this.setState((e.target.files[0]) )
-
-//   }
-
-//   handleCategory = (e) => {
-
-//     this.setState({ [e.target.name]: e.target.value });
-//     this.setState({ [e.target.slug]: e.target.value });
-//     this.setState({ [e.target.description]: e.target.value });
-//     this.setState({ [e.target.image]: e.target.value });
-
-//   }
-//   handleParentCategory = (e) => {
-//     this.setState({ parent_category: e.value });
-//   }
-  // handleImage = (e) => {
-  //   this.setFile(e.target.files[0]);
-  //   this.setFileName(e.target.files[0].image);
-  // }
-
-//   handleAlert= (e) => {
-//     toast("Category Added Successfully!")  
-    
-// }
-
-//   handleSubmit = (e ,form) => {
-
-//     e.preventDefault()
-    
-  
-//     console.log(this.state)
-//     axios.post('http://localhost:5000/category_form', this.state)
-
-//       .then(response => {
-//         console.log(response)
-       
-//       })
-//       .catch(error => {
-//         console.log(error)
-//       })
-      
-//   }
 
 constructor(props) {
   super(props);
@@ -81,6 +23,7 @@ constructor(props) {
   this.state = {
            name: "",
           slug: "",
+          price: "",
           parent_category: "",
           description: "",
           profile_pic: ''
@@ -91,6 +34,7 @@ constructor(props) {
 
     this.setState({ [e.target.name]: e.target.value });
     this.setState({ [e.target.slug]: e.target.value });
+    this.setState({ [e.target.price]: e.target.value });
     this.setState({ [e.target.description]: e.target.value });
 
   }
@@ -101,6 +45,8 @@ constructor(props) {
 handleChangeImage(e) {
   this.setState({ profile_pic: e.target.files[0] })
   console.log(e.target.files[0]);
+  this.setState({ img: URL.createObjectURL(e.target.files[0]) })
+
   // return false
 }
 handleSubmit(e) {
@@ -109,6 +55,7 @@ handleSubmit(e) {
   formData.append('profile_pic', this.state.profile_pic)
   formData.append('name', this.state.name)
   formData.append('slug', this.state.slug)
+  formData.append('price', this.state.price)
   formData.append('parent_category', this.state.parent_category)
   formData.append('description', this.state.description)
   axios.post("http://localhost:5000/category_form", formData, {
@@ -120,7 +67,7 @@ handleSubmit(e) {
 
 
   render() {
-    const { name, slug, description, image } = this.state
+    const { name, slug,price, description, image } = this.state
     return (
 
       <>
@@ -149,6 +96,10 @@ handleSubmit(e) {
                       <div className="form-group">
                         <label htmlFor="slug">Slug</label>
                         <input type="text" name="slug" className="form-control" value={slug} onChange={this.handleCategory} required/>
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="slug">Price </label>
+                        <input type="number" name="price" className="form-control" value={price} onChange={this.handleCategory} required/>
                       </div>
                       <div className="form-group">
                         <label htmlFor="parent_category">Parent Category</label>

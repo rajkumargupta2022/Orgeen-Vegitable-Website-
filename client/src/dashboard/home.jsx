@@ -4,6 +4,21 @@ import React from "react";
 
 class Home extends React.Component
 {
+  componentDidMount() {
+    fetch('http://localhost:5000/all_categories')
+        .then(response => response.json())
+        .then(records => {
+            console.log("records", this.state.records)
+            this.setState({
+                records: records
+
+            })
+            
+
+        })
+        
+        .catch(error => console.log(error))
+}
     render()
     {
         return(

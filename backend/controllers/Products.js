@@ -2,24 +2,30 @@ import Products from "../models/ProductModel.js";
 
 
 export const Product = async (req, res) => {
+  console.log("jhgy",req);
 
-    const { name, slug, parent_category, regular ,sale ,description} = req.body;
-   if(!name || !slug || !parent_category ||!regular ||!sale){
-        return res.status(422).json({ error: "All Fields are Required"})
-   }
+  const image = req.file.filename;
+// console.log("vg",image);
+
+    const { name, slug, parent_category,ProductStocks, regular ,sale ,description} = req.body;
+  //  if(!name || !slug || !parent_category ||!regular ||!sale){
+  //       return res.status(422).json({ error: "All Fields are Required"})
+  //  }
     try {
         Products.create({
             name: name,
             slug: slug,
             parent_category: parent_category,
+            ProductStocks:ProductStocks,
             regular: regular,
             sale: sale,
-            description: description
+            description: description,
+            image: image
             
         });
-        res.status(200).json({ msg: "category added successfully" });
+        res.status(200).json({ msg: "Product added successfully" });
     } catch (error) {
-        res.status(200).json({ msg: "Failed" });
+        res.status(400).json({ msg: "Failed" });
     }
 }
 
@@ -28,7 +34,7 @@ export const Product = async (req, res) => {
 export const getProducts = async (req, res) => {
     try {
         const allproduct = await Products.findAll({
-            attributes: ['id', 'name', 'slug','parent_category','regular','sale','description']
+            attributes: ['id', 'name', 'slug','parent_category','regular','sale','description','image']
         });
         res.json(allproduct);
         console.log(allproduct);
