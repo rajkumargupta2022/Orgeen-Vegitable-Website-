@@ -1,11 +1,12 @@
 import express from "express";
-import { getUsers, Register, Login, Logout } from "../controllers/Users.js";
+import { getUsers, Register, Login, UpdatePassword, Logout } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import { SingleProduct,SingleHomeProduct,Category,getSingleAddData, getCategories, deleteCategories, updateCategories, getSingleCategory } from "../controllers/Categories.js";
 import { Product, getProducts, deleteProducts, updateProducts, getSingleProduct } from "../controllers/Products.js";
-import { PlaceOrder,OrderData } from "../controllers/OrderController.js";
+import { PlaceOrder,OrderData,SubOrder } from "../controllers/OrderController.js";
 import { CheckOut, getSingleCheckOut } from "../controllers/CheckOut.js";
+// import { apidata} from "../controllers/api.json"
 import { AddSubscriptionPlan,getSubscriptionPlan,getSingleSubscriptionPlan,updateSubscriptionPlan,deleteSubscriptionPlan,SingleSubscribe } from "../controllers/AddSubscription.js";
 import path from 'path';
 import multer from "multer"
@@ -32,6 +33,7 @@ const router = express.Router();
 router.get('/users', verifyToken, getUsers);
 router.post('/users', Register);
 router.post('/login', Login);
+router.post('/updatePassword', UpdatePassword);
 router.get('/token', refreshToken);
 router.delete('/logout', Logout);
 //cotegry 
@@ -61,6 +63,7 @@ router.get('/getsingleCheckOut', getSingleCheckOut);
 // Order
 router.post('/placeOrder', PlaceOrder);
 router.get('/orderData', OrderData);
+// router.get('/apidata', SubOrder);
 
 // add subscription Plan
 router.post('/add_subscription_plan',upload.single('profile_pic'), AddSubscriptionPlan);

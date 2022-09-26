@@ -112,9 +112,10 @@ class Products extends React.Component {
     getSingleProduct(event) {
 
     }
-    
+
     render() {
-// console.log("home",this.state.records);
+        // console.log("home",this.state.records);
+        const a = 4;
         return (
             <>
                 <div className="container-fluid home-main">
@@ -445,7 +446,8 @@ class Products extends React.Component {
                                 <div className="row">
                                     {this.state.recordss.map((users) => (
                                         <div className="col-md-2">
-                                            <Link to={{ pathname: `/Product/${users.name.replace(' ', '-')}` }}>
+                                            <Link to={{ pathname: `/SingleProduct/${users.slug.replace(' ', '-')}` }}>
+
                                                 <img src={`assets/img/uploads/${users.image}`} alt="First slide" className='img-fluid' />
                                             </Link>
                                             <h6>{users.name}</h6>

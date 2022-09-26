@@ -1,24 +1,91 @@
 import React from "react";
 import { FaTachometerAlt, FaCartArrowDown, FaDownload, FaWallet, FaMapMarkerAlt, FaUserAlt, FaGift, FaPlusCircle, FaRandom, FaListAlt, FaSignOutAlt } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from "axios";
 class My_Account extends React.Component {
+  
+      
     constructor(props) {
         super(props);
-        this.state = {
-            records: []
-
+        this.handleCheckOut = this.handleCheckOut.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this);
+         this.state = {
+            currentPassword: "",
+            newPassword: "",
+            confirmPassword: "",
+            checkPassword:"",
+            msg:""
+       
+           
         };
+        this.state = {
+      
+            records: [],
+            recordss: []
+           
+        };
+      
+    }
+    logoutStorage = () => {
+        localStorage.removeItem("TOKEN");
+        window.location.reload(false);
+    
+      };
+    handleCheckOut(event) {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+
     }
 
+    handleSubmit(e) {
+        const { currentPassword, newPassword, confirmPassword } = this.state
+        e.preventDefault()
+    if((newPassword===confirmPassword)){
+        const data = {
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+            confirmPassword: confirmPassword,
+            email:window.localStorage.getItem('email')
+        }
+      
+        axios.post("http://localhost:5000/updatePassword", data, {
+        })
+            .then(res => {
+                toast("Password Updated Successfully!")
+                this.setState({
+                    currentPassword: "", 
+                    newPassword: "", 
+                    confirmPassword: ""
+                })
+
+            })
+            .catch(error => {
+               alert("Please Enter Correct Password ")
+              });
+        
+
+    }else{
+        alert("New Password and Confirm Password Did not Match")
+    }
+}
     componentDidMount() {
+        const email = {
+            "name": window.localStorage.getItem('email')
+          }
+//    const email= window.localStorage.getItem('email')
         fetch('http://localhost:5000/orderData')
             .then((response) => response.json())
             .then(records => {
-                this.setState({ records: records.allOrder });
+                this.setState({
+                     records: records.allOrder, 
+                     recordss: records.address 
+                    });
             });
+           
     }
 
     render() {
-
         return (
             <>
                 <style>
@@ -32,6 +99,7 @@ class My_Account extends React.Component {
                 <div className="container-fluid bg-main">
                     <section className="my-account-s pt-5">
                         <div className="row pt-3">
+                        <ToastContainer toastStyle={{ backgroundColor: "green" }} />
                             <div className="col-md-3">
                                 <ul className="nav nav-tabs d-block">
                                     <li className="nav-item">
@@ -56,7 +124,7 @@ class My_Account extends React.Component {
                                         <a className="nav-link" data-toggle="tab" href="#account"><FaUserAlt /> ACCOUNT DETAILS</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link" data-toggle="tab" href="#logout"><FaSignOutAlt />LOGOUT</a>
+                                        <a className="nav-link" data-toggle="tab"  onClick={this.logoutStorage.bind()} href="#logout"><FaSignOutAlt />LOGOUT</a>
                                     </li>
                                 </ul>
                             </div>
@@ -127,20 +195,22 @@ class My_Account extends React.Component {
                                         <hr />
                                         <header>
                                             <h2>Billing address</h2> <a className="edit mt-n5">EDIT</a></header>
+                                           
                                         <address className="pt-4">
-                                            Saurabh Prajapati<br />
-                                            Lucknow<br />
-                                            Lucknow 226010<br />
-                                            Uttar Pradesh
+                                            {this.state.recordss.first_name} {this.state.recordss.last_name}<br />
+                                            {this.state.recordss.street_address} <br />
+                                            {this.state.recordss.town_city} {this.state.recordss.state}<br />
+                                            {this.state.recordss.pin}
                                         </address>
+                                      
                                         <hr />
                                         <header>
                                             <h2>Shipping address </h2> <a className="edit mt-n5">EDIT</a></header>
-                                        <address className="pt-4">
-                                            Saurabh Prajapati<br />
-                                            Lucknow<br />
-                                            Lucknow 226010<br />
-                                            Uttar Pradesh
+                                            <address className="pt-4">
+                                            {this.state.recordss.first_name} {this.state.recordss.last_name}<br />
+                                            {this.state.recordss.street_address} <br />
+                                            {this.state.recordss.town_city} {this.state.recordss.state}<br />
+                                            {this.state.recordss.pin}
                                         </address>
                                     </div>
                                     <div id="account" className="container tab-pane fade" >
@@ -197,34 +267,35 @@ class My_Account extends React.Component {
                                            
                                    
                                     
-                                        <form className="needs-validation" novalidate="">
+                                        <form className="needs-validation" onSubmit={this.handleSubmit}>
 
                                             <div className="card-body">
                                                 <div className="form-group row">
+                                                    {/* <span style={{color: "red"}}>{checkPassword}</span> */}
                                                     <label className="col-sm-5 col-form-label" for="currentpass">Current password
                                                         <abbr className="required" title="required">*</abbr>
                                                     </label>
                                                     <div className="col-sm-7">
-                                                        <input type="text" className="form-control" required="" name="currentpass" />
+                                                        <input type="text" className="form-control" required=""name="currentPassword"  value={this.state.currentPassword} onChange={this.handleCheckOut} />
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label className="col-sm-5 col-form-label" for="newpass">New password
                                                         <abbr className="required" title="required">*</abbr></label>
                                                     <div className="col-sm-7">
-                                                        <input type="text" className="form-control" required="" name="newpass" />
+                                                        <input type="text" className="form-control" required="" name="newPassword" value={this.state.newPassword} onChange={this.handleCheckOut} />
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label className="col-sm-5 col-form-label" for="confirmpass">Confirm password</label>
                                                     <div className="col-sm-7">
-                                                        <input type="text" className="form-control" name="confirmpass" />
+                                                        <input type="text" className="form-control" name="confirmPassword"  value={this.state.confirmPassword} onChange={this.handleCheckOut} />
                                                     </div>
                                                 </div>                                        
                                               
                                             </div>
                                             <div className="text-right pb-3 pr-3">
-                                                <button className="btn btn-success pb-2">Save Change</button>
+                                                <button type="submit" className="btn btn-success pb-2">Save Change</button>
                                             </div>
                                         </form>                               
 

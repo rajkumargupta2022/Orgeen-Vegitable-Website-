@@ -18,6 +18,7 @@ import Our_Farms from "./pages/our-farms";
 import About from "./pages/about";
 import Contact from "./pages/contact";
 import MonthlySubscription from "./pages/MonthlySubscription";
+import SingleProduct from "./pages/SingleProduct";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 // import Login from "./components/Login";
@@ -55,6 +56,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />       */}
           <Route exact path="/" ><Header /><Home /> <Footer /></Route>
           <Route exact path="/Product/:id"><Header />  <Product/> <Footer /> </Route>
+          <Route exact path="/SingleProduct/:id"><Header />  <SingleProduct/> <Footer /> </Route>
           {/* <Route exact path="/cProduct"><Header />  <CProduct/> <Footer /> </Route> */}
           {/* <Route exact path="/single-product/:64"  ><Header />  <Single_Product/> <Footer /> </Route> */}
           <Route exact path="/shop" ><Header /><Shop /> <Footer /></Route>
@@ -93,7 +95,7 @@ const App = () => {
           <Route path="/shop" element={<Shop />} />   
           <Route path="/monthly-subscription-plan" element={<MonthlySubscription />} />   
           <Route path="/Product" element={<Product />} /> 
-          {/* <Route path="/cProduct" element={<CProduct />} />  */}
+          <Route path="/SingleProduct" element={<SingleProduct />} /> 
           <Route path="/terms-and-conditions" element={<Terms_And_Conditions />} />   
           <Route path="/privacy-policy" element={<Privacy_Policy />} />  
           <Route path="/refund-cancellation" element={<Refund_Cancellation />} />  

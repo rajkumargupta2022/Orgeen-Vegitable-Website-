@@ -33,13 +33,7 @@ export const Register = async (req, res) => {
         }
     });
   
-
-    // if (user) {
-    //   return res.status(400).send({msg:"User Already Exist. Please Login"});
-    // }
     res.json(user);
-
-    // if ((user[0].email==req.body.email)) return res.status(200).json({ msg: "Email Id Allready Registered" });
 
 
     try {
@@ -59,8 +53,11 @@ export const Register = async (req, res) => {
 export const Login = async (req, res) => {
     // if ((req.body.email!="")) return res.status(400).json({ msg: "Please Enter Email" });
     
-    // const orderData = await OrderModel.findOne({where: { email: req.body.email }})
-    // res.status(200).json({orderData: orderData});
+    //  const orderData = await OrderModel.findOne({where: { email: req.body.email }})
+    //  if(orderData){
+    //     res.status(200).json({orderData: orderData});
+    //     console.log("eee",orderData);
+    //  }
 
     try {
 
@@ -69,6 +66,7 @@ export const Login = async (req, res) => {
                 email: req.body.email
             }
         })
+       
 
         // console.log("aaaaaa", req.body.email);
         const match = await bcrypt.compare(req.body.password, user[0].password);
@@ -90,6 +88,44 @@ export const Login = async (req, res) => {
         res.status(404).json({ msg: "Email Id not Exit" });
     }
 }
+
+export const UpdatePassword = async (req, res) => {
+    // const { currentPaasword, newPassword, confirmPassword,email} = req.body;
+     if (req.body.newPassword !== req.body.confirmPassword) return res.status(400).json({ msg: "Password and Confirm Password did not Match" });
+ 
+     
+    const user = await Users.findOne({
+        where: {
+            email:req.body.email
+            // email:"rajkumar@gmail.com"
+        }
+    });
+
+    // if (password !== confPassword) return res.status(400).json({ msg: "Password and Confirm Password not match" });
+    
+    // const salt = await bcrypt.genSalt();
+    // const hashPassword = await bcrypt.hash(password, salt);
+   
+  
+    // res.json(user);
+
+
+    try {
+        
+        const salt = await bcrypt.genSalt();
+        const password = await bcrypt.hash(req.body.newPassword, salt);
+        // console.log("ppppp",req.body.newPassword);
+        const match = await bcrypt.compare(req.body.currentPassword, user.password);
+        if (!match) return res.status(400).json({ msg: "Wrong Password" });
+        await Users.update({password: password}, {
+            where: { "email": user.email }
+        });
+            return res.status(200).json({ msg: "Password Updated Succesfully" });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 export const Logout = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;

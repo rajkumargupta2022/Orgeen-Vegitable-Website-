@@ -2,10 +2,9 @@
 import OrderModel from "../models/OrderModel.js";
 import SubOrderModel from "../models/SubOrderModel.js";
 import SubscriptionModel from "../models/AddSubscriptionModel.js";
-
-// import nodemailer from "nodemailer";
-// const nodemailer = require("nodemailer");
-
+import CheckOuts from "../models/CheckOutModel.js";
+import nodemailer from "nodemailer";
+// import localStorage from "node-localstorage"
 
 export const  PlaceOrder = async (req, res) => {
 
@@ -16,29 +15,27 @@ export const  PlaceOrder = async (req, res) => {
   const year= oldYear+1;
   const order_number= "ORG"+year;
 
+  const {product_id,	category_id} = req.body;
 
-  // var transporter = nodemailer.createTransport({
-  //   service: 'gmail',
-  //   auth: {
-  //     user: 'rajkumarbfcsofttech@gmail.com',
-  //     pass: 'BFC@2022'
-  //   }
-  // });
+  const { email,user_id, total_price} = req.body;
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'rajkumarbfcsofttech@gmail.com',
+      pass: 'dmpycgstaxmxdbif',
+    },
+  });
   
-  // var mailOptions = {
-  //   from: 'rajkumarbfcsofttech@gmail.com',
-  //   to: 'rajkumargupta84952@gmail.com',
-  //   subject: 'Sending Email using Node.js',
-  //   text: 'That was easy!'
-  // };
   
-  // transporter.sendMail(mailOptions, function(error, info){
-  //   if (error) {
-  //     console.log(error);
-  //   } else {
-  //     console.log('Email sent: ' + info.response);
-  //   }
-  // });
+  transporter.sendMail({
+    from: 'rajkumarbfcsofttech@gmail.com', // sender address
+    to: email, // list of receivers
+    subject: "Orgeen ", // Subject line
+    text: "There email from Orgeen Your Order Confirmed", // plain text body
+    html: "<b>There email from Orgeen Your Order Confirmed  </b>", // html body
+  }).then(info => {
+    console.log({info});
+  }).catch(console.error);
 
   if(req.body.cod==true){
     var cod ="Payment Final";
@@ -48,10 +45,6 @@ export const  PlaceOrder = async (req, res) => {
 
   }
 
-
-  const {product_id,	category_id} = req.body;
-
-  const { email,user_id, total_price} = req.body;
 
  if(total_price > 5000){
     OrderModel.create({
@@ -84,14 +77,19 @@ export const  PlaceOrder = async (req, res) => {
 }
 
 export const OrderData = async (req, res) => {
-  const id = req.body.id;
 
+  // const {	name} = req.body;
+  // sessionStorage.getItem(email)
+//  const email= localStorage.getItem("email");
+//  const email=  sessionStorage.getItem(email)
+  // console.log("qqqq",req.body.email);
     try {
 
         const allOrder = await OrderModel.findAll();
-       
+        const address = await CheckOuts.findOne({order: [ [ 'id', 'DESC' ]],})
+      //  console.log("aaaaaa",address);
 //{where:{"parent_category" : 2}}
-        res.status(200).json({allOrder: allOrder});
+        res.status(200).json({allOrder: allOrder,address: address});
     } catch (error) {
         res.status(400).json({ msg: "Failed found" });
     }
@@ -101,15 +99,18 @@ export const OrderData = async (req, res) => {
 
 export const SubOrder = async (req, res) => {
   
-    const { order_number, sub_total,product_id,	category_id} = req.body;
+    const { order_number, div_type,flag} = req.body;
     try {
-        SubOrderModel.create({
-            order_number: order_number,
-            sub_total: sub_total,
-            product_id: product_id,
-            category_id:category_id
-  
-        });
+      
+        // let items = req.body.map(item => {
+        //   return {
+        //     order_number: order_number,
+        //     div_type: div_type,
+        //     flag: flag
+        //   };
+        // });
+        // Tables.create(items);
+        
         res.status(200).json({ msg: "Your Order Placed Successfully" });
     } catch (error) {
         res.status(400).json({ msg: "Failed" });
@@ -120,6 +121,7 @@ export const SubOrder = async (req, res) => {
   
     const { order_number, sub_total,product_id,	category_id} = req.body;
     try {
+      
         SubOrderModel.create({
             order_number: order_number,
             sub_total: sub_total,
@@ -133,6 +135,6 @@ export const SubOrder = async (req, res) => {
     }
   }
 
-
+/// dmpycgstaxmxdbif
 
 

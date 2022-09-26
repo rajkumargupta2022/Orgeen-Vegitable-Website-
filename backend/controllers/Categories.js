@@ -126,18 +126,20 @@ export const deleteCategories = async (req, res) => {
 export const SingleProduct = async (req, res) => {
   const slug = req.body.slug;
   
-console.log("Ddddddddsax",req.body.name);
+// console.log("Ddddddddsax",req.body.name);
 try {
   const SingleData = await Categories.findOne({where:{"slug" : slug}});
+  const ProductData = await Products.findOne({where:{"slug" : slug}});
    
 //{where:{"parent_category" : 2}}
     const data = {
         "status":200,
         "msg":"success",
-        "data":SingleData
+        "data":SingleData,
+        "pData":ProductData,
     }
     res.status(200).json(data);
-    // console.log("mmmmmmmmmm",data);
+    console.log("mmmmmmmmmm",data);
 } catch (error) {
     res.status(400).json({ msg: "Failed found" });
 }

@@ -11,9 +11,9 @@ import Select from 'react-select';
 import axios from "axios";
 
 const StockOptions = [
-  { value: 'In Stock', label: 'In Stock' },
-  { value: 'Out Of Stock', label: 'Out Of Stock' },
-  { value: 'Upcoming Products', label: 'Upcoming Products' }
+  { value: '1', label: 'In Stock' },
+  { value: '2', label: 'Out Of Stock' },
+  { value: '3', label: 'Upcoming Products' }
 ]
 
 

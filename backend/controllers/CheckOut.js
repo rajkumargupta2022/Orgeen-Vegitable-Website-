@@ -37,14 +37,15 @@ export const getSingleCheckOut = async (req, res) => {
 
   UserModel.hasMany(CheckOuts, {foreignKey: "id"})
   CheckOuts.belongsTo(UserModel, {foreignKey: "id"})
-      const SingleCheckOutData =  await CheckOuts.findOne({
-        include: [{
-            model: UserModel,
-            where: {
-                id: 2
-            }
-        }]
-    })
+      const SingleCheckOutData =  await CheckOuts.findOne({order: [ [ 'id', 'DESC' ]],})
+    //   ({
+    //     include: [{
+    //         model: UserModel,
+    //         where: {
+    //             id: 2
+    //         }
+    //     }]
+    // })
     // {order: [ [ 'id', 'DESC' ]],}
 
         res.status(200).json({SingleCheckOutData: SingleCheckOutData});
@@ -53,3 +54,4 @@ export const getSingleCheckOut = async (req, res) => {
     }
 }
 
+// console.log("cccccccccccccccccccccccc",req.cookies.email);

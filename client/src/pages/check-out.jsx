@@ -137,19 +137,19 @@ class Check_Out extends React.Component {
             })
 
 
-
     }
 
 
-
     handlePlaceHolder() {
-        //    this.setState({ location: e.value });
+        const emails=window.localStorage.getItem('TOKEN');
+        // alert(emails)
+    if(emails==null){
+        toast("Plese Login First!")
 
-    //    var myJsonString = JSON.stringify(this.state.cart);
-    //     console.log("qqqqqq", this.state.cart)
-    //     console.log("rrrrr", myJsonString)
+    }else{
 
         const data = {
+        
             email: window.localStorage.getItem('email'),
             user_id: this.state.totalPrice * 10,
             total_price: this.state.totalPrice,
@@ -167,7 +167,7 @@ class Check_Out extends React.Component {
 
             })
 
-
+        }
 
     }
 
@@ -195,6 +195,7 @@ class Check_Out extends React.Component {
     
     render() {
        
+        var r = (Math.random() + 1).toString(36).substring(7)
 
         return (
             <>
@@ -305,7 +306,7 @@ class Check_Out extends React.Component {
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
-                                                    <label className="col-sm-5 col-form-label" for="email">Email address</label>
+                                                    <label className="col-sm-5 col-form-label" for="email">Email address   {r}</label>
                                                     <div className="col-sm-7">
                                                         <input type="email" name="email" required className="form-control" value={this.state.email} onChange={this.handleCheckOut} />
                                                     </div>
@@ -373,7 +374,7 @@ class Check_Out extends React.Component {
                                                                         <img src={`../assets/img/uploads/${cartItem.img}`} alt="" className='img-fluid w-60' />
                                                                     </div>
                                                                     <div className="col-md-7">
-                                                                        <h6 className="mt-5"><a href="#" className="text-decoration-none"><b>{cartItem.name}(150g-200g)</b></a></h6>
+                                                                        <h6 className="mt-5"><a href="#" className="text-decoration-none"><b>{cartItem.name}</b></a></h6>
                                                                     </div>
                                                                 </div>
                                                             </td>
