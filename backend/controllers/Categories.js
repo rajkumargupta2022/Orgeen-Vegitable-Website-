@@ -126,7 +126,8 @@ export const deleteCategories = async (req, res) => {
 export const SingleProduct = async (req, res) => {
   const slug = req.body.slug;
   
-// console.log("Ddddddddsax",req.body.name);
+console.log("Ddddddddsax", req.body);
+console.log("Ddddddddsax", req.params);
 try {
   const SingleData = await Categories.findOne({where:{"slug" : slug}});
   const ProductData = await Products.findOne({where:{"slug" : slug}});

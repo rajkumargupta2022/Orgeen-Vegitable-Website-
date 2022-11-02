@@ -32,20 +32,25 @@ export const CheckOut = async (req, res) => {
 
 export const getSingleCheckOut = async (req, res) => {
   // const id = 50;
-  
+  console.log("yhhhhhhhhh",req.body);
+  console.log("eee",req.params);
+  console.log("yhrrhhhhhhhh",req.query);
     try {
 
-  UserModel.hasMany(CheckOuts, {foreignKey: "id"})
-  CheckOuts.belongsTo(UserModel, {foreignKey: "id"})
-      const SingleCheckOutData =  await CheckOuts.findOne({order: [ [ 'id', 'DESC' ]],})
-    //   ({
-    //     include: [{
-    //         model: UserModel,
-    //         where: {
-    //             id: 2
-    //         }
-    //     }]
-    // })
+  // UserModel.hasMany(CheckOuts, {foreignKey: "id"})
+  CheckOuts.hasMany(UserModel, {foreignKey: "id"})
+  UserModel.belongsTo(CheckOuts, {foreignKey: "id"})
+
+      const SingleCheckOutData =  await CheckOuts.findOne
+      ({
+        logging:console.log,
+        include: [{
+            model: UserModel,
+            where: {
+                "email": req.query.email
+            }
+        }]
+    })
     // {order: [ [ 'id', 'DESC' ]],}
 
         res.status(200).json({SingleCheckOutData: SingleCheckOutData});

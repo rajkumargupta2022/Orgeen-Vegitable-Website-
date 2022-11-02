@@ -131,7 +131,7 @@ class My_Account extends React.Component {
                             <div className="col-md-9">
                                 <div className="tab-content">
                                     <div id="dashboard" class="container tab-pane active"><br />
-                                        <p>Hello <b>saurabh.prajapati </b>(not <b>saurabh.prajapati </b>? <a href="#">Log out</a>)</p>
+                                        <p>Hello <b>{this.state.recordss.first_name} {this.state.recordss.last_name} </b>(not <b>{this.state.recordss.first_name} {this.state.recordss.last_name}</b>? <a href="#">Log out</a>)</p>
                                         <p>From your account dashboard you can view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a>, and<a href="#"> edit your password and account details</a>.</p>
                                     </div>
                                     <div id="orders" class="container tab-pane fade"><br />

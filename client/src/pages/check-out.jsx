@@ -102,6 +102,7 @@ class Check_Out extends React.Component {
         const { first_name, last_name, company_name, country_name, street_address, town_city, state, location, pin, phone, email } = this.state
 
         e.preventDefault()
+        console.log("localStorage.getItem('email')", localStorage.getItem('email'));
         const data = {
             first_name: first_name,
             last_name: last_name,
@@ -113,7 +114,7 @@ class Check_Out extends React.Component {
             location: location,
             pin: pin,
             phone: phone,
-            email: email
+            email: email,
         }
 
         axios.post("http://localhost:5000/check-out", data, {
@@ -144,6 +145,7 @@ class Check_Out extends React.Component {
         const emails=window.localStorage.getItem('TOKEN');
         // alert(emails)
     if(emails==null){
+        toast.dismiss();
         toast("Plese Login First!")
 
     }else{
@@ -176,7 +178,8 @@ class Check_Out extends React.Component {
         this.setState({
             records: ''
         })
-        fetch('http://localhost:5000/getsingleCheckOut')
+        console.log("localStorage.getItem('email')",localStorage.getItem('email'));
+        fetch(`http://localhost:5000/getsingleCheckOut?email=${localStorage.getItem('email')}`, {logEmail:localStorage.getItem('email')})
             .then(res => res.json())
             .then(records => {
                 console.log("daaaaaas", records.SingleCheckOutData);

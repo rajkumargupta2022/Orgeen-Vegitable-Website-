@@ -12,9 +12,6 @@ const app = express();
 
 
 
-
-
-
 try {
     await db.authenticate();
     console.log('Database Connected...');

@@ -65,19 +65,19 @@ const Signup = () => {
           <div className="input-group-prepend">
             <span className="input-group-text"><FaUser /></span>
           </div>
-          <input type="text" className="form-control"  placeholder="Last Name"  value={lname} onChange={(e) => setLname(e.target.value)}/>
+          <input type="text" className="form-control"  placeholder="Last Name"   value={lname} onChange={(e) => setLname(e.target.value)}/>
         </div>
         <div className="input-group mb-3">
           <div className="input-group-prepend">
             <span className="input-group-text"><FaKey /></span>
           </div>
-          <input type="password" className="form-control" required placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+          <input type="password" className="form-control" minlength="8" required placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
         </div>
         <div className="input-group mb-3">
           <div className="input-group-prepend">
             <span className="input-group-text"><FaKey /></span>
           </div>
-          <input type="password" className="form-control" required placeholder="Confirm Password" value={confPassword} onChange={(e) => setConfPassword(e.target.value)}/>
+          <input type="password" className="form-control" minlength="8" required placeholder="Confirm Password" value={confPassword} onChange={(e) => setConfPassword(e.target.value)}/>
         </div>
         <div>
           <ul classNameName='check'>

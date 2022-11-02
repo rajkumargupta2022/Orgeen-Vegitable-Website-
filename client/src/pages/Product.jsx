@@ -75,7 +75,7 @@ class Product extends React.Component
      IncrementItem = () => {
          if (this.state.clicks < 10) {
              this.setState({
-                 clicks: this.state.clicks + 1
+                 clicks:  this.state.clicks + 1
              });
          }
      }
@@ -101,7 +101,7 @@ class Product extends React.Component
           }
        
 
-        axios.post('http://localhost:5000/SingleProduct', slug)
+        axios.post(`http://localhost:5000/SingleProduct?id=${23}`, slug)
         .then(records => {
             this.setState({
                 records: records.data.data 

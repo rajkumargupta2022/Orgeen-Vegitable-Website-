@@ -7,6 +7,10 @@ import nodemailer from "nodemailer";
 // import localStorage from "node-localstorage"
 
 export const  PlaceOrder = async (req, res) => {
+  console.log("Gggggggggggggggggggggggggg");
+  // const {	name} = req.body;
+  // sessionStorage.getItem('email')
+  console.log("email=", localStorage.getItem('email'));
 
   const allProducts = await OrderModel.findOne({order: [ [ 'id', 'DESC' ]],});
   const order=allProducts.dataValues.order_number;
@@ -77,9 +81,7 @@ export const  PlaceOrder = async (req, res) => {
 }
 
 export const OrderData = async (req, res) => {
-
-  // const {	name} = req.body;
-  // sessionStorage.getItem(email)
+  
 //  const email= localStorage.getItem("email");
 //  const email=  sessionStorage.getItem(email)
   // console.log("qqqq",req.body.email);

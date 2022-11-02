@@ -28,7 +28,8 @@ class Shop extends React.Component {
 
         this.state = {
             records: [],
-            recordss: []
+            recordss: [],
+            planRecords:[]
 
         };
         
@@ -84,7 +85,11 @@ class Shop extends React.Component {
                     
                 })
             })
-           
+            fetch('http://localhost:5000/all_Subscription_Plan')
+            .then((response) => response.json())
+            .then(planRecords => {
+                this.setState({ planRecords: planRecords });
+            });
            
     }
 
@@ -92,6 +97,7 @@ class Shop extends React.Component {
 
     }
     render() {
+        // console.log("ss",this.state.planRecords);
         return (
             <>
                 <div className="container-fluid shop-main">
@@ -134,17 +140,24 @@ class Shop extends React.Component {
                                 </section>
                                 <section className='shop-product-s'>
                                     <div className="row">
+                                    {
+                                            this.state.planRecords.map((plandata) => (
                                         <div className="col-lg-3 col-md-6 text-center">
-                                            <a href="/single-product"> <img src="assets/img/uploads/2022/02/healthy-food-2-300x300.png" alt="" />
+                                             <Link to={{ pathname: `/Subscribe/${plandata.name.replace(' ', '-')}` }}>
+                                                        <img src={`assets/img/uploads/${plandata.image}`} alt="First slide" className='img-fluid' />
+                                                    </Link>
                                                 <h6>Monthly Subscription</h6>
-                                                <h4>Premium Monthly Subscription</h4></a>
-                                            <h5>₹10000.00</h5>
+                                                <h4>{plandata.name}</h4>
+                                            <h5>₹{plandata.price}.00</h5>
                                             <div className='product-tool'>
-                                                <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
+                                                {/* <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a> */}
+                                                <button className='tool-button' onClick={() => { this.handelCart(plandata.name, plandata.price, plandata.image, plandata.id) }}><FaShoppingCart className='tool' /></button>
                                                 <a href="#" className='tool-button'><FaEye className='tool' /></a>
                                             </div>
                                         </div>
-                                        <div className="col-lg-3 col-md-6 text-center">
+                                           ))
+                                        }
+                                        {/* <div className="col-lg-3 col-md-6 text-center">
                                             <img src="assets/img/uploads/2022/02/healthy-food-1-300x300.png" alt="" />
                                             <h6>Monthly Subscription</h6>
                                             <h4>Standard Monthly Subscription</h4>
@@ -163,17 +176,8 @@ class Shop extends React.Component {
                                                 <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
                                                 <a href="#" className='tool-button'><FaEye className='tool' /></a>
                                             </div>
-                                        </div>
-                                        <div className="col-lg-3 col-md-6 text-center">
-                                            <img src="assets/img/uploads/2022/03/Karaoke-1-295x322.png" alt="" />
-                                            <h6>Vegetables</h6>
-                                            <h4>Gawar Phali (1kg)</h4>
-                                            <h5>₹96.00</h5>
-                                            <div className='product-tool'>
-                                                <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
-                                                <a href="#" className='tool-button'><FaEye className='tool' /></a>
-                                            </div>
-                                        </div>
+                                        </div> */}
+                                        
                                     </div>
                                     <div className="row">
                                     {
@@ -194,7 +198,7 @@ class Shop extends React.Component {
                                           ))
                                         }
                                         
-                                        <div className="col-lg-3 col-md-6 text-center">
+                                        {/* <div className="col-lg-3 col-md-6 text-center">
                                             <img src="../assets/img/uploads/2022/02/capsi-295x322.png" alt="" />
                                             <h6>Soil Less</h6>
                                             <h4>Capiscum (1kg)</h4>
@@ -203,8 +207,8 @@ class Shop extends React.Component {
                                                 <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
                                                 <a href="#" className='tool-button'><FaEye className='tool' /></a>
                                             </div>
-                                        </div>
-                                        <div className="col-lg-3 col-md-6 text-center">
+                                        </div> */}
+                                        {/* <div className="col-lg-3 col-md-6 text-center">
                                             <img src="assets/img/uploads/2022//01/88-295x322.png" alt="" />
                                             <h6>Fruits</h6>
                                             <h4>Muskmelon (1kg)</h4>
@@ -213,9 +217,9 @@ class Shop extends React.Component {
                                                 <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
                                                 <a href="#" className='tool-button'><FaEye className='tool' /></a>
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </div>
-                                    <div className="row">
+                                    {/* <div className="row">
                                         <div className="col-lg-3 col-md-6 text-center">
                                             <img src="assets/img/uploads/2022/01/67-295x322.png" alt="" />
                                             <h6>Vegetables</h6>
@@ -256,7 +260,7 @@ class Shop extends React.Component {
                                                 <a href="#" className='tool-button'><FaEye className='tool' /></a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <ul class="pagination justify-content-center mt-5">
                                         <li class="page-item active"><a class="page-link" href="/shop">1</a></li>
                                         <li class="page-item"><a class="page-link" href="#">2</a></li>

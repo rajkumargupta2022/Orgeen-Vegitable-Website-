@@ -51,7 +51,8 @@ class Products extends React.Component {
 
         this.state = {
             records: [],
-            recordss: []
+            recordss: [],
+            planRecords:[]
 
         };
 
@@ -105,6 +106,11 @@ class Products extends React.Component {
                     recordss: records.allProducts
                 })
             })
+            fetch('http://localhost:5000/all_Subscription_Plan')
+            .then((response) => response.json())
+            .then(planRecords => {
+                this.setState({ planRecords: planRecords });
+            });
 
 
 
@@ -406,36 +412,24 @@ class Products extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-3 col-sm-6">
-                                <img className='msp-img img-fluid' src="assets/img/uploads/2022/02/healthy-food-2-300x300.png" alt="" />
-                                <div className='product-tool'>
-                                    <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
-                                    <a href="#" className='tool-button'><FaEye className='tool' /></a>
-                                </div>
-                                <h6>Monthly Subscription</h6>
-                                <h4>Primium Monthly Subscription</h4>
-                                <h5>₹10000.00</h5>
-                            </div>
-                            <div className="col-md-3 col-sm-6 pt-xs-4">
-                                <img className='msp-img img-fluid' src="assets/img/uploads/2022/02/healthy-food-1-300x300.png" alt="" />
-                                <div className='product-tool'>
-                                    <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
-                                    <a href="#" className='tool-button'><FaEye className='tool' /></a>
-                                </div>
-                                <h6>Monthly Subscription</h6>
-                                <h4>Standard Monthly Subscription</h4>
-                                <h5>₹7500.00</h5>
-                            </div>
+                          
+                            {
+                                 this.state.planRecords.map((user) => (
                             <div className="col-md-3 col-sm-6 pt-xs-4 pt-lg-0">
-                                <img className='msp-img img-fluid' src="assets/img/uploads/2022/02/healthy-food-300x300.png" alt="" />
+                                <Link to={{ pathname: `/Product/${user.name.replace(' ', '-')}` }}>
+                                                        <img src={`assets/img/uploads/${user.image}`} alt="First slide" className='img-fluid' />
+                                                    </Link>
                                 <div className='product-tool'>
-                                    <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a>
+                                    {/* <a href="#" className='tool-button'><FaShoppingCart className='tool' /></a> */}
+                                    <button className='tool-button' onClick={() => { this.handelCart(user.name, user.price, user.image, user.id) }}><FaShoppingCart className='tool' /></button>
                                     <a href="#" className='tool-button'><FaEye className='tool' /></a>
                                 </div>
                                 <h6>Monthly Subscription</h6>
-                                <h4>Basic Monthly Subscription</h4>
-                                <h5>₹5000.00</h5>
+                                <h4>{user.name}</h4>
+                                <h5>₹{user.price}.00</h5>
                             </div>
+                              ))
+                            }
                         </div>
                     </section>
                     <section className='upcoming-products'>
